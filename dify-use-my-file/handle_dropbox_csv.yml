@@ -1,0 +1,454 @@
+app:
+  description: Dropbox で公開している CSV ファイルから変数を読み取ってプロンプトを実行するサンプルフロー
+  icon: 🤖
+  icon_background: '#FFEAD5'
+  mode: workflow
+  name: handle_dropbox_csv
+  use_icon_as_answer_icon: false
+kind: app
+version: 0.1.2
+workflow:
+  conversation_variables: []
+  environment_variables: []
+  features:
+    file_upload:
+      image:
+        enabled: false
+        number_limits: 3
+        transfer_methods:
+        - local_file
+        - remote_url
+    opening_statement: ''
+    retriever_resource:
+      enabled: false
+    sensitive_word_avoidance:
+      enabled: false
+    speech_to_text:
+      enabled: false
+    suggested_questions: []
+    suggested_questions_after_answer:
+      enabled: false
+    text_to_speech:
+      enabled: false
+      language: ''
+      voice: ''
+  graph:
+    edges:
+    - data:
+        isInIteration: true
+        iteration_id: '1726895746719'
+        sourceType: iteration-start
+        targetType: template-transform
+      id: 1726895746719start-source-1726898087629-target
+      source: 1726895746719start
+      sourceHandle: source
+      target: '1726898087629'
+      targetHandle: target
+      type: custom
+      zIndex: 1002
+    - data:
+        isInIteration: true
+        iteration_id: '1726895746719'
+        sourceType: template-transform
+        targetType: llm
+      id: 1726898087629-source-1726898546316-target
+      source: '1726898087629'
+      sourceHandle: source
+      target: '1726898546316'
+      targetHandle: target
+      type: custom
+      zIndex: 1002
+    - data:
+        isInIteration: false
+        sourceType: iteration
+        targetType: template-transform
+      id: 1726895746719-source-1726899136613-target
+      source: '1726895746719'
+      sourceHandle: source
+      target: '1726899136613'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: template-transform
+        targetType: end
+      id: 1726899136613-source-1726899288744-target
+      source: '1726899136613'
+      sourceHandle: source
+      target: '1726899288744'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: start
+        targetType: code
+      id: 1726895484191-source-1726900778520-target
+      source: '1726895484191'
+      sourceHandle: source
+      target: '1726900778520'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: code
+        targetType: http-request
+      id: 1726900778520-source-1726901010115-target
+      source: '1726900778520'
+      sourceHandle: source
+      target: '1726901010115'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: http-request
+        targetType: code
+      id: 1726901010115-source-1726901059689-target
+      source: '1726901010115'
+      sourceHandle: source
+      target: '1726901059689'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: code
+        targetType: iteration
+      id: 1726901059689-source-1726895746719-target
+      source: '1726901059689'
+      sourceHandle: source
+      target: '1726895746719'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    nodes:
+    - data:
+        desc: ''
+        selected: false
+        title: 開始
+        type: start
+        variables:
+        - label: dropbox_url
+          max_length: 256
+          options: []
+          required: true
+          type: text-input
+          variable: dropbox_url
+      height: 90
+      id: '1726895484191'
+      position:
+        x: 30
+        y: 317.5
+      positionAbsolute:
+        x: 30
+        y: 317.5
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        desc: ''
+        height: 235
+        iterator_selector:
+        - '1726901059689'
+        - result
+        output_selector:
+        - '1726898546316'
+        - text
+        output_type: array[string]
+        selected: false
+        start_node_id: 1726895746719start
+        title: execute_prompts
+        type: iteration
+        width: 692
+      height: 235
+      id: '1726895746719'
+      position:
+        x: 1246
+        y: 317.5
+      positionAbsolute:
+        x: 1246
+        y: 317.5
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 692
+      zIndex: 1
+    - data:
+        desc: ''
+        isInIteration: true
+        selected: false
+        title: ''
+        type: iteration-start
+      draggable: false
+      height: 44
+      id: 1726895746719start
+      parentId: '1726895746719'
+      position:
+        x: 24
+        y: 68
+      positionAbsolute:
+        x: 1270
+        y: 385.5
+      selectable: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom-iteration-start
+      width: 44
+      zIndex: 1002
+    - data:
+        desc: ''
+        isInIteration: true
+        iteration_id: '1726895746719'
+        selected: false
+        template: '[変数]を[出力形式]で出力してください。
+
+
+          # 変数
+
+
+          {% for key, value in ojb.items() %}
+
+
+          - {{ key }}: {{ value }}
+
+
+          {% endfor %}
+
+
+          # 出力形式
+
+
+          =====
+
+          [key]: [value]
+
+          '
+        title: make_prompt
+        type: template-transform
+        variables:
+        - value_selector:
+          - '1726895746719'
+          - item
+          variable: ojb
+      height: 54
+      id: '1726898087629'
+      parentId: '1726895746719'
+      position:
+        x: 128
+        y: 68
+      positionAbsolute:
+        x: 1374
+        y: 385.5
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+      zIndex: 1002
+    - data:
+        context:
+          enabled: true
+          variable_selector:
+          - '1726898087629'
+          - output
+        desc: ''
+        isInIteration: true
+        iteration_id: '1726895746719'
+        model:
+          completion_params:
+            temperature: 0.7
+          mode: chat
+          name: gpt-4-0125-preview
+          provider: openai
+        prompt_template:
+        - id: d574901b-ae47-46cd-9828-2fe64be4a249
+          role: system
+          text: ''
+        - id: 85609cb7-de5f-4274-90ee-91ea0ef741b9
+          role: user
+          text: '{{#1726898087629.output#}}'
+        selected: false
+        title: LLM
+        type: llm
+        variables: []
+        vision:
+          enabled: false
+      height: 98
+      id: '1726898546316'
+      parentId: '1726895746719'
+      position:
+        x: 432
+        y: 68
+      positionAbsolute:
+        x: 1678
+        y: 385.5
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+      zIndex: 1002
+    - data:
+        desc: ''
+        selected: false
+        template: '{% for output in arg1 %}
+
+
+          ===== プロンプト {{ loop.index }} =====
+
+
+          {{ output }}
+
+
+          {% endfor %}'
+        title: summerize_output
+        type: template-transform
+        variables:
+        - value_selector:
+          - '1726895746719'
+          - output
+          variable: arg1
+      height: 54
+      id: '1726899136613'
+      position:
+        x: 1998
+        y: 317.5
+      positionAbsolute:
+        x: 1998
+        y: 317.5
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        desc: ''
+        outputs:
+        - value_selector:
+          - '1726899136613'
+          - output
+          variable: output
+        selected: true
+        title: 終了
+        type: end
+      height: 90
+      id: '1726899288744'
+      position:
+        x: 2302
+        y: 317.5
+      positionAbsolute:
+        x: 2302
+        y: 317.5
+      selected: true
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        code: "def main(dropbox_url):\n    return {\n        \"result\": dropbox_url\
+          \ \\\n        .replace(\"https://www.dropbox.com\", \"https://dl.dropbox.com\"\
+          ) \\\n        .replace(\"&dl=0\", \"&dl=1\")\n    }\n"
+        code_language: python3
+        desc: ''
+        outputs:
+          result:
+            children: null
+            type: string
+        selected: false
+        title: modify_url
+        type: code
+        variables:
+        - value_selector:
+          - '1726895484191'
+          - dropbox_url
+          variable: dropbox_url
+      height: 54
+      id: '1726900778520'
+      position:
+        x: 334
+        y: 317.5
+      positionAbsolute:
+        x: 334
+        y: 317.5
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        authorization:
+          config: null
+          type: no-auth
+        body:
+          data: ''
+          type: none
+        desc: ''
+        headers: ''
+        method: get
+        params: ''
+        selected: false
+        timeout:
+          max_connect_timeout: 0
+          max_read_timeout: 0
+          max_write_timeout: 0
+        title: HTTPリクエスト
+        type: http-request
+        url: '{{#1726900778520.result#}}'
+        variables: []
+      height: 93
+      id: '1726901010115'
+      position:
+        x: 638
+        y: 317.5
+      positionAbsolute:
+        x: 638
+        y: 317.5
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        code: "from typing import Dict, List\n\n\ndef main(csv_text: str) -> List[Dict]:\n\
+          \    lines = csv_text.strip().split('\\n')\n    # 最初の行をキーとして使用\n    keys\
+          \ = lines[0].split(',')\n    # 各行に対して辞書を作成\n    dict_list = []\n    for\
+          \ line in lines[1:]:\n        values = line.split(',')\n        entry =\
+          \ {keys[i]: values[i] for i in range(len(keys))}\n        dict_list.append(entry)\n\
+          \    return {\n        \"result\": dict_list\n    }\n"
+        code_language: python3
+        desc: ''
+        outputs:
+          result:
+            children: null
+            type: array[object]
+        selected: false
+        title: txt2dict
+        type: code
+        variables:
+        - value_selector:
+          - '1726901010115'
+          - body
+          variable: csv_text
+      height: 54
+      id: '1726901059689'
+      position:
+        x: 942
+        y: 317.5
+      positionAbsolute:
+        x: 942
+        y: 317.5
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    viewport:
+      x: -1231.3200000000002
+      y: 126.37999999999994
+      zoom: 0.8400000000000001
